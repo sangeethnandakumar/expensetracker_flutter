@@ -1,8 +1,8 @@
-import 'package:expences/pages/tools_page.dart';
+import 'package:expences/widgets/sync_appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'pages/track_page.dart';
 import 'pages/records_page.dart';
+import 'pages/tools_page.dart';
 import 'pages/report_page.dart';
 
 void main() async {
@@ -17,6 +17,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
+  bool _isSyncing = false;
+  int _syncDuration = 4; // Default sync duration in seconds
 
   late List<Widget> _pages;
 
@@ -35,12 +37,39 @@ class _HomeState extends State<Home> {
       ToolsPage(),
       ReportPage(),
     ];
+
+    // Show sync bar for the specified duration on startup for demonstration
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startSync(_syncDuration);
+    });
+  }
+
+  void _startSync(int duration) {
+    setState(() {
+      _isSyncing = true;
+    });
+
+    Future.delayed(Duration(seconds: duration), () {
+      setState(() {
+        _isSyncing = false;
+      });
+    });
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  void _onMenuItemSelected(String value) {
+    // Handle menu item selection here
+    print("Selected menu item: $value");
+  }
+
+  void _onAccountPressed() {
+    // Handle account icon press here
+    print("Account icon pressed");
   }
 
   @override
@@ -52,15 +81,11 @@ class _HomeState extends State<Home> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Expense Tracker'),
-              Text('By Sangeeth Nandakumar | BETA TESTING', style: TextStyle(fontSize: 15),),
-            ],
-          ),
-          elevation: 10,
+        appBar: SyncAppBar(
+          isSyncing: _isSyncing,
+          syncDuration: _syncDuration, // Pass the sync duration
+          onMenuPressed: () => _onMenuItemSelected("Menu"),
+          onAccountPressed: _onAccountPressed,
         ),
         body: _pages[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
@@ -80,11 +105,11 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
               label: 'Settings',
-            )
+            ),
           ],
           currentIndex: _currentIndex,
           selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.black, // Set the unselected item color here
+          unselectedItemColor: Colors.black,
           onTap: _onItemTapped,
         ),
       ),

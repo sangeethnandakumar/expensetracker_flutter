@@ -1,4 +1,3 @@
-// track_page.dart
 import 'package:flutter/material.dart';
 import 'category_editor.dart'; // Import the new page
 import '../widgets/categorygrid.dart';
@@ -85,7 +84,7 @@ class _TrackPageState extends State<TrackPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryEditorPage(categories: _categories),
+        builder: (context) => CategoryEditorPage(),
       ),
     );
   }
@@ -98,65 +97,86 @@ class _TrackPageState extends State<TrackPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Define a fixed height for the CategoryGrid
+    final double fixedGridHeight = 120.0; // Adjust this value as needed
+
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0),
-            child: CurrencyEditor(money: _money),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: FloatingActionButton(
-                onPressed: _openCategoryEditor,
-                backgroundColor: Colors.blue.shade100,
-                child: Icon(Icons.edit, color: Colors.blue.shade900),
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                        child: CurrencyEditor(money: _money),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
+                          child: FloatingActionButton(
+                            onPressed: _openCategoryEditor,
+                            backgroundColor: Colors.blue.shade100,
+                            child: Icon(Icons.edit, color: Colors.blue.shade900),
+                            mini: true,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: fixedGridHeight,
+                        child: CategoryGrid(
+                          onCategorySelected: _onCategorySelected,
+                          setCategories: _setCategories,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        child: NotesInput(
+                          placeholder: 'Add A Note',
+                          notes: _notes,
+                          onChanged: (value) {
+                            setState(() {
+                              _notes = value;
+                            });
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        child: ActionButtons(
+                          onAddExpense: _addExpense,
+                          onAddIncome: _addIncome,
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                          child: KeyPad(
+                            allowDecimal: true,
+                            allowClear: true,
+                            disable: false,
+                            maxAllowed: 100000,
+                            value: double.tryParse(_money) ?? 0.0,
+                            seedColor: Colors.blue.shade100,
+                            onKeyPress: _onKeyPress,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12.0),
-              child: CategoryGrid(
-                onCategorySelected: _onCategorySelected,
-                setCategories: _setCategories, // Add this to set categories
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: NotesInput(
-              placeholder: 'Add A Note',
-              notes: _notes,
-              onChanged: (value) {
-                setState(() {
-                  _notes = value;
-                });
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ActionButtons(
-              onAddExpense: _addExpense,
-              onAddIncome: _addIncome,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),
-            child: KeyPad(
-              allowDecimal: true,
-              allowClear: true,
-              disable: false,
-              maxAllowed: 100000,
-              value: double.tryParse(_money) ?? 0.0,
-              seedColor: Colors.blue.shade100,
-              onKeyPress: _onKeyPress,
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }

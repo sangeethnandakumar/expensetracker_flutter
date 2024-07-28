@@ -97,7 +97,7 @@ class _RecordsPageState extends State<RecordsPage> {
             children: [
               ListTile(
                 leading: Icon(Icons.delete, color: Colors.red),
-                title: Text('Delete', style: TextStyle(color: Colors.red)),
+                title: Text('Delete', style: TextStyle(color: Colors.redAccent)),
                 onTap: () async {
                   await _deleteRecord(recordId);
                   Navigator.pop(context);

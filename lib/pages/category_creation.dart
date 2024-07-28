@@ -21,7 +21,6 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
   String? selectedImage;
   Color selectedColor = Colors.blue; // Default color
   String title = 'Preview';
-  String description = '';
   List<Color> currentColors = List.generate(20, (index) {
     double hue = (360 / 20) * index; // 20 colors with evenly spaced hues
     return HSVColor.fromAHSV(1.0, hue, 0.8, 0.8).toColor();
@@ -62,7 +61,6 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
     CategoryModel previewCategory = CategoryModel(
       id: '',
       title: title,
-      text: description,
       icon: selectedIconName ?? 'help',
       color: '#${selectedColor.value.toRadixString(16).substring(2)}',
       customImage: base64Image, // Use base64 image for preview
@@ -96,16 +94,6 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
           },
         ),
         SizedBox(height: 16),
-        NotesInput(
-          placeholder: 'Category Description',
-          notes: description,
-          onChanged: (value) {
-            setState(() {
-              description = value;
-            });
-          },
-        ),
-        SizedBox(height: 16),
         ColorPicker(
           selectedColor: selectedColor,
           onColorSelected: (color) {
@@ -120,16 +108,15 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
   }
 
   void createCategory() {
-    if (title.isEmpty || description.isEmpty) {
+    if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Title and description cannot be empty')),
+        SnackBar(content: Text('Title cannot be empty')),
       );
       return;
     }
 
     final categoryData = {
       'title': title,
-      'text': description,
       'icon': selectedIconName,
       'color': '#${selectedColor.value.toRadixString(16).substring(2)}',
       'customImage': base64Image,

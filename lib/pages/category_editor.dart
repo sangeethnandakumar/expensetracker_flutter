@@ -1,35 +1,22 @@
 import 'package:flutter/material.dart';
-import '../models/CategoryModel.dart';
-import '../widgets/category.dart';
+import '../widgets/categorygrid.dart';
 import 'category_creation.dart'; // Import the new page
 
 class CategoryEditorPage extends StatelessWidget {
-  final List<CategoryModel> categories;
-
-  const CategoryEditorPage({Key? key, required this.categories}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Category Editor'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4, // 4 categories per row
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            return Category(
-              category: categories[index],
-              isSelected: false,
-            );
-          },
-        ),
+      body: CategoryGrid(
+        onCategorySelected: (categoryId) {
+          // Handle category selection if needed
+          print("Selected category: $categoryId");
+        },
+        setCategories: (categories) {
+          // You can add any additional logic to manage categories if necessary
+        },
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

@@ -9,14 +9,23 @@ class Category extends StatelessWidget {
 
   Category({required this.category, required this.isSelected});
 
+  bool _isVeryLightColor(Color color) {
+    // Adjust the threshold to be less sensitive to light colors
+    double luminance = (0.299 * color.red + 0.587 * color.green + 0.114 * color.blue) / 255;
+    return luminance > 0.75; // Adjusted threshold for very light colors
+  }
+
   @override
   Widget build(BuildContext context) {
+    Color bgColor = Color(int.parse(category.color.replaceFirst('#', '0xff')));
+    bool isVeryLightBgColor = _isVeryLightColor(bgColor);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Color(int.parse(category.color.replaceFirst('#', '0xff'))),
+            color: bgColor,
             shape: BoxShape.circle,
           ),
           child: CircleAvatar(
@@ -32,7 +41,7 @@ class Category extends StatelessWidget {
                 fit: BoxFit.cover,
               )
                   : Image.network(
-                category.customImage!,
+                'https://expensetracker.twileloop.com/images/' + category.customImage!,
                 width: 38,
                 height: 38,
                 fit: BoxFit.cover,
@@ -50,7 +59,7 @@ class Category extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           decoration: BoxDecoration(
             color: isSelected
-                ? Color(int.parse(category.color.replaceFirst('#', '0xff')))
+                ? bgColor
                 : Colors.blue.withOpacity(0.05),
             borderRadius: BorderRadius.circular(12.0),
           ),
@@ -59,7 +68,9 @@ class Category extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: isSelected ? Colors.white : Colors.blueGrey,
+              color: isSelected
+                  ? (isVeryLightBgColor ? Colors.black : Colors.white)
+                  : Colors.blueGrey,
             ),
           ),
         ),

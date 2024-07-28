@@ -69,3 +69,4 @@ flutter:
   assets:
     - assets/empty.json
     - assets/tick.json
+    - assets/ghost.json
