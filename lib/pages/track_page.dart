@@ -128,6 +128,7 @@ class _TrackPageState extends State<TrackPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: NotesInput(
+              placeholder: 'Add A Note',
               notes: _notes,
               onChanged: (value) {
                 setState(() {

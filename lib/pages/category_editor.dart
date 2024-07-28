@@ -1,7 +1,7 @@
-// category_editor.dart
 import 'package:flutter/material.dart';
 import '../models/CategoryModel.dart';
 import '../widgets/category.dart';
+import 'category_creation.dart'; // Import the new page
 
 class CategoryEditorPage extends StatelessWidget {
   final List<CategoryModel> categories;
@@ -33,10 +33,15 @@ class CategoryEditorPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Handle adding new category
-          print("Add new category");
+          // Navigate to the category creation page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategoryCreationPage(),
+            ),
+          );
         },
-        label: Text('Add Category'),
+        label: Text('Add New Category'),
         icon: Icon(Icons.add),
         backgroundColor: Colors.blue.shade100,
         foregroundColor: Colors.blue.shade900,

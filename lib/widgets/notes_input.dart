@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class NotesInput extends StatelessWidget {
   final String notes;
+  final String placeholder;
   final Function(String) onChanged;
 
-  const NotesInput({Key? key, required this.notes, required this.onChanged}) : super(key: key);
+  const NotesInput({Key? key, required this.notes,required this.placeholder, required this.onChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class NotesInput extends StatelessWidget {
       child: TextField(
         onChanged: onChanged,
         decoration: InputDecoration(
-          labelText: 'Enter a quick note',
+          labelText: placeholder,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
             borderSide: BorderSide(color: Colors.blue.shade400), // Blue border

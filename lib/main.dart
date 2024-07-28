@@ -1,10 +1,12 @@
 import 'package:expences/pages/tools_page.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'pages/track_page.dart';
 import 'pages/records_page.dart';
 import 'pages/report_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(Home());
 }
 
@@ -51,7 +53,13 @@ class _HomeState extends State<Home> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Expense Tracker'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Expense Tracker'),
+              Text('By Sangeeth Nandakumar | BETA TESTING', style: TextStyle(fontSize: 15),),
+            ],
+          ),
           elevation: 10,
         ),
         body: _pages[_currentIndex],

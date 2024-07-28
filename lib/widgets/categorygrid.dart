@@ -1,4 +1,3 @@
-// category_grid.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../api.dart';
@@ -7,7 +6,7 @@ import 'category.dart';
 
 class CategoryGrid extends StatefulWidget {
   final Function(String) onCategorySelected;
-  final Function(List<CategoryModel>) setCategories; // Add this to set categories in parent
+  final Function(List<CategoryModel>) setCategories;
 
   const CategoryGrid({Key? key, required this.onCategorySelected, required this.setCategories}) : super(key: key);
 
@@ -31,7 +30,7 @@ class _CategoryGridState extends State<CategoryGrid> {
     Api.get('/categories', (data) {
       setState(() {
         categories = (data as List).map((item) => CategoryModel.fromJson(item)).toList();
-        widget.setCategories(categories); // Set categories in parent
+        widget.setCategories(categories);
         isLoading = false;
         if (categories.isNotEmpty) {
           widget.onCategorySelected(categories[0].id);
@@ -58,7 +57,7 @@ class _CategoryGridState extends State<CategoryGrid> {
           double itemHeight = 80;
 
           return SizedBox(
-            height: itemHeight, // Ensure the height fits one row
+            height: itemHeight,
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -77,10 +76,14 @@ class _CategoryGridState extends State<CategoryGrid> {
                       widget.onCategorySelected(categories[index].id);
                     });
                   },
-                  child: Category(
-                    category: categories[index],
-                    isSelected: selectedIndex == index,
-                  ).animate().fadeIn(duration: 500.ms),
+                  child: AnimatedScale(
+                    scale: selectedIndex == index ? 1.1 : 1.0,
+                    duration: Duration(milliseconds: 300),
+                    child: Category(
+                      category: categories[index],
+                      isSelected: selectedIndex == index,
+                    ).animate().fadeIn(duration: 500.ms),
+                  ),
                 );
               },
             ),
