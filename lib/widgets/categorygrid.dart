@@ -7,9 +7,21 @@ import 'category.dart';
 
 class CategoryGrid extends StatefulWidget {
   final Function(String) onCategorySelected;
+  final double itemHeight;
+  final int noOfRows;
+  final double mainAxisSpacing;
+  final double crossAxisSpacing;
   final Function(List<CategoryModel>) setCategories;
 
-  const CategoryGrid({Key? key, required this.onCategorySelected, required this.setCategories}) : super(key: key);
+  const CategoryGrid({
+    Key? key,
+    required this.onCategorySelected,
+    required this.setCategories,
+    required this.itemHeight,
+    required this.noOfRows,
+    required this.mainAxisSpacing,
+    required this.crossAxisSpacing,
+  }) : super(key: key);
 
   @override
   _CategoryGridState createState() => _CategoryGridState();
@@ -86,18 +98,22 @@ class _CategoryGridState extends State<CategoryGrid> {
     } else {
       return LayoutBuilder(
         builder: (context, constraints) {
-          double itemWidth = (constraints.maxWidth - 40) / 4;
-          double itemHeight = 80;
+          double itemHeight = widget.itemHeight;
 
-          return SizedBox(
-            height: itemHeight,
-            child: GridView.builder(
+          // Calculate the total width needed for the items
+          double totalWidth = constraints.maxWidth;
+          double itemWidth = (totalWidth - (widget.crossAxisSpacing * (widget.noOfRows - 1))) / widget.noOfRows;
+
+          if (widget.noOfRows == 1) {
+            // Horizontal scrolling
+            return GridView.builder(
               scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: widget.crossAxisSpacing,
+                mainAxisSpacing: widget.mainAxisSpacing,
                 childAspectRatio: itemWidth / itemHeight,
               ),
               itemCount: categories.length,
@@ -122,8 +138,42 @@ class _CategoryGridState extends State<CategoryGrid> {
                   ),
                 );
               },
-            ),
-          );
+            );
+          } else {
+            // Vertical scrolling with wrapping
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: widget.noOfRows,
+                crossAxisSpacing: widget.crossAxisSpacing,
+                mainAxisSpacing: widget.mainAxisSpacing,
+                childAspectRatio: itemWidth / itemHeight,
+              ),
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = index;
+                      widget.onCategorySelected(categories[index].id);
+                    });
+                  },
+                  onLongPress: () {
+                    _showOptionsBottomSheet(categories[index].id);
+                  },
+                  child: AnimatedScale(
+                    scale: selectedIndex == index ? 1.1 : 1.0,
+                    duration: Duration(milliseconds: 300),
+                    child: Category(
+                      category: categories[index],
+                      isSelected: selectedIndex == index,
+                    ).animate().fadeIn(duration: 500.ms),
+                  ),
+                );
+              },
+            );
+          }
         },
       );
     }
@@ -159,7 +209,7 @@ class _CategoryGridState extends State<CategoryGrid> {
       builder: (context) {
         return AlertDialog(
           title: Text('Delete Category'),
-          content: Text('Are you sure you want to delete this category?\nDeleting the category will remove all the expense tracks logged under it'),
+          content: Text('Are you sure you want to delete this category?\nDeleting the category will remove all the expense tracks logged under it.'),
           actions: [
             TextButton(
               onPressed: () {

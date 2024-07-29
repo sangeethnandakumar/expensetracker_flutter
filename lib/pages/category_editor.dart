@@ -10,12 +10,14 @@ class CategoryEditorPage extends StatelessWidget {
         title: Text('Category Editor'),
       ),
       body: CategoryGrid(
+        itemHeight: 120,
+        noOfRows: 3,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
         onCategorySelected: (categoryId) {
-          // Handle category selection if needed
           print("Selected category: $categoryId");
         },
         setCategories: (categories) {
-          // You can add any additional logic to manage categories if necessary
         },
       ),
       floatingActionButton: FloatingActionButton.extended(

@@ -135,6 +135,10 @@ class _TrackPageState extends State<TrackPage> {
                         child: CategoryGrid(
                           onCategorySelected: _onCategorySelected,
                           setCategories: _setCategories,
+                          itemHeight: 320,
+                          noOfRows: 1,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
                         ),
                       ),
                       Padding(
