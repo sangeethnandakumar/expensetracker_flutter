@@ -48,7 +48,7 @@ class _SyncAppBarState extends State<SyncAppBar> {
             ),
           ],
           child: IconButton(
-            icon: Icon(Icons.sync, color: Colors.white),
+            icon: Icon(Icons.sync, color: Colors.black),
             onPressed: () {},
           ),
         )
@@ -74,7 +74,7 @@ class _SyncAppBarState extends State<SyncAppBar> {
       ],
       flexibleSpace: widget.isSyncing
           ? Shimmer.fromColors(
-        baseColor: Colors.lightBlue.withOpacity(0.3),
+        baseColor: Colors.yellowAccent.withOpacity(0.3),
         highlightColor: Colors.white.withOpacity(0.6),
         child: Container(
           color: Colors.greenAccent,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'category_editor.dart'; // Import the new page
+import 'category_editor.dart';
 import '../widgets/categorygrid.dart';
 import '../widgets/currencyeditor.dart';
 import '../widgets/keypad.dart';
@@ -21,7 +21,32 @@ class _TrackPageState extends State<TrackPage> {
   String _money = '0';
   String _notes = '';
   String _category = '';
-  List<CategoryModel> _categories = []; // Add this to hold categories
+  List<CategoryModel> _categories = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCategories();
+  }
+
+  void fetchCategories() {
+    setState(() {
+      _isLoading = true;
+    });
+    Api.get('/categories', (data) {
+      setState(() {
+        _categories = (data as List).map((item) => CategoryModel.fromJson(item)).toList();
+        _isLoading = false;
+      });
+    }, (error) {
+      setState(() {
+        _isLoading = false;
+      });
+      // Handle error
+      print("Error fetching categories: $error");
+    });
+  }
 
   void _onKeyPress(String value) {
     setState(() {
@@ -79,26 +104,19 @@ class _TrackPageState extends State<TrackPage> {
     );
   }
 
-  void _openCategoryEditor() {
-    // Navigate to category editor page with categories
-    Navigator.push(
+  void _openCategoryEditor() async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CategoryEditorPage(),
       ),
     );
-  }
-
-  void _setCategories(List<CategoryModel> categories) {
-    setState(() {
-      _categories = categories;
-    });
+    fetchCategories();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Define a fixed height for the CategoryGrid
-    final double fixedGridHeight = 120.0; // Adjust this value as needed
+    final double fixedGridHeight = 120.0;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -132,9 +150,11 @@ class _TrackPageState extends State<TrackPage> {
                       ),
                       SizedBox(
                         height: fixedGridHeight,
-                        child: CategoryGrid(
+                        child: _isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : CategoryGrid(
+                          categories: _categories,
                           onCategorySelected: _onCategorySelected,
-                          setCategories: _setCategories,
                           itemHeight: 320,
                           noOfRows: 1,
                           mainAxisSpacing: 10,

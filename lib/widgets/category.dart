@@ -50,7 +50,7 @@ class Category extends StatelessWidget {
                 : Icon(
               IconMapping.getIcon(category.icon) ?? Icons.help,
               size: 28,
-              color: Colors.white,
+              color: isVeryLightBgColor ? Colors.black : Colors.white,
             ),
           ),
         ),

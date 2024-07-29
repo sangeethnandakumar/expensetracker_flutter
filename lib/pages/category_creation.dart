@@ -126,11 +126,12 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Category created successfully')),
       );
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true); // Pass true to indicate success
     }, (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to create category: $error')),
       );
+      Navigator.of(context).pop(false); // Pass false to indicate failure
     });
   }
 
