@@ -1,4 +1,5 @@
 import 'package:expences/pages/category_editor.dart';
+import 'package:expences/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'category_creation.dart';
 import '../widgets/categorygrid.dart';
@@ -165,7 +166,7 @@ class _TrackPageState extends State<TrackPage> {
                       SizedBox(
                         height: fixedGridHeight,
                         child: _isLoading
-                            ? Center(child: CircularProgressIndicator())
+                            ? Center(child: Loading())
                             : CategoryGrid(
                           categories: _categories,
                           onCategorySelected: _onCategorySelected,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lottie/lottie.dart';
 import '../api.dart';
 import '../models/CategoryModel.dart';
 import 'category.dart';
+import 'empty_category_placeholder.dart';
 
 class CategoryGrid extends StatefulWidget {
   final List<CategoryModel> categories;
@@ -105,36 +105,10 @@ class _CategoryGridState extends State<CategoryGrid> {
   @override
   Widget build(BuildContext context) {
     if (widget.categories.isEmpty) {
-      return Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset(
-                  'assets/ghost.json',
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.fill,
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Create categories to start with',
-                  style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            SizedBox(width: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Add your logic to navigate to category creation page
-              },
-              child: Text('Add Category'),
-            ),
-          ],
-        ),
+      return EmptyCategoryPlaceholder(
+        onAddCategory: () {
+          // Add your logic to navigate to category creation page
+        },
       );
     } else {
       return LayoutBuilder(

@@ -1,3 +1,4 @@
+import 'package:expences/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import '../models/CategoryModel.dart';
 import '../models/record.dart';
@@ -243,7 +244,7 @@ class _RecordsPageState extends State<RecordsPage> {
 
   Widget _buildContent() {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: Loading());
     } else if (_errorMessage != null) {
       return Center(child: Text('Error: $_errorMessage'));
     } else if (_records.isEmpty) {
