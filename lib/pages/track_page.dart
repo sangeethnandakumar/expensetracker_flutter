@@ -1,5 +1,6 @@
+import 'package:expences/pages/category_editor.dart';
 import 'package:flutter/material.dart';
-import 'category_editor.dart';
+import 'category_creation.dart';
 import '../widgets/categorygrid.dart';
 import '../widgets/currencyeditor.dart';
 import '../widgets/keypad.dart';
@@ -104,8 +105,18 @@ class _TrackPageState extends State<TrackPage> {
     );
   }
 
+  void _openCategoryCreator() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CategoryCreationPage(),
+      ),
+    );
+    fetchCategories();
+  }
+
   void _openCategoryEditor() async {
-    final result = await Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CategoryEditorPage(),
@@ -141,9 +152,12 @@ class _TrackPageState extends State<TrackPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
                           child: FloatingActionButton(
-                            onPressed: _openCategoryEditor,
+                            onPressed: _categories.isEmpty ? _openCategoryCreator : _openCategoryEditor,
                             backgroundColor: Colors.blue.shade100,
-                            child: Icon(Icons.edit, color: Colors.blue.shade900),
+                            child: Icon(
+                              _categories.isEmpty ? Icons.add : Icons.edit,
+                              color: Colors.blue.shade900,
+                            ),
                             mini: true,
                           ),
                         ),
