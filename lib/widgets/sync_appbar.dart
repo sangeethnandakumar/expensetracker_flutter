@@ -33,7 +33,7 @@ class _SyncAppBarState extends State<SyncAppBar> {
         children: [
           Text('Expense Tracker'),
           Text(
-            'v${widget.appVersion}', // Display the app version
+            widget.appVersion, // Display the app version
             style: TextStyle(fontSize: 12),
           ),
         ],
