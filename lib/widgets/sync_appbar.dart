@@ -7,12 +7,14 @@ class SyncAppBar extends StatefulWidget implements PreferredSizeWidget {
   final int syncDuration; // Sync duration in seconds
   final VoidCallback onMenuPressed;
   final VoidCallback onAccountPressed;
+  final String appVersion; // Add this to pass the app version
 
   SyncAppBar({
     required this.isSyncing,
     required this.syncDuration,
     required this.onMenuPressed,
     required this.onAccountPressed,
+    required this.appVersion, // Initialize app version
   });
 
   @override
@@ -31,8 +33,8 @@ class _SyncAppBarState extends State<SyncAppBar> {
         children: [
           Text('Expense Tracker'),
           Text(
-            'By Sangeeth Nandakumar | BETA TESTING',
-            style: TextStyle(fontSize: 15),
+            'v${widget.appVersion}', // Display the app version
+            style: TextStyle(fontSize: 12),
           ),
         ],
       ),

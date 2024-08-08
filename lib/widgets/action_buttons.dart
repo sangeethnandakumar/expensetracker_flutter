@@ -36,7 +36,7 @@ class ActionButtons extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16.0), // Increased vertical padding
-                  textStyle: TextStyle(fontSize: 18.0), // Increased font size
+                  textStyle: TextStyle(fontSize: 15.0), // Increased font size
                   elevation: 5, // Add elevation
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
@@ -66,7 +66,7 @@ class ActionButtons extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16.0), // Increased vertical padding
-                  textStyle: TextStyle(fontSize: 18.0), // Increased font size
+                  textStyle: TextStyle(fontSize: 15.0), // Increased font size
                   elevation: 5, // Add elevation
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),

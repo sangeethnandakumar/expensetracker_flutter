@@ -24,7 +24,7 @@ class MyKey extends StatelessWidget {
           },
           child: Container(
             width: 120,
-            height: 55,
+            height: 50,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,

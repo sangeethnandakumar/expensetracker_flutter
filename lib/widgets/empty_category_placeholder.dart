@@ -18,17 +18,17 @@ class EmptyCategoryPlaceholder extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                "Create A New Category To Get Started",
+                style: TextStyle(fontSize: 12, color: Colors.blueGrey, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
               Container(
                 child: Lottie.asset(
                   'assets/wind.json',
                   width: 100,
                   fit: BoxFit.contain,
                 ),
-              ),
-              Text(
-                "Let's created a category to get started",
-                style: TextStyle(fontSize: 16, color: Colors.blueGrey, fontWeight: FontWeight.w700),
-                textAlign: TextAlign.center,
               )
             ],
           )

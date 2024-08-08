@@ -8,7 +8,7 @@ class CurrencyEditor extends StatelessWidget {
 
   CurrencyEditor({
     required this.money,
-    this.fontSize = 100, // Default value
+    this.fontSize = 80, // Default value
     this.textColor = Colors.black, // Default value
   });
 
@@ -25,7 +25,7 @@ class CurrencyEditor extends StatelessWidget {
               '₹',
               style: TextStyle(
                 color: Colors.grey,
-                fontSize: fontSize * 0.8, // Smaller size for ₹
+                fontSize: fontSize * 0.6, // Smaller size for ₹
                 fontWeight: FontWeight.w900,
               ),
             ),
