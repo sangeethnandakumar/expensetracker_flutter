@@ -76,7 +76,7 @@ class _SyncAppBarState extends State<SyncAppBar> {
       ],
       flexibleSpace: widget.isSyncing
           ? Shimmer.fromColors(
-        baseColor: Colors.yellowAccent.withOpacity(0.3),
+        baseColor: Colors.blue.withOpacity(0.3),
         highlightColor: Colors.white.withOpacity(0.6),
         child: Container(
           color: Colors.greenAccent,
