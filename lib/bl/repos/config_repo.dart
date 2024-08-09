@@ -43,7 +43,12 @@ class ConfigRepository extends BaseRepository<ConfigModel> {
         instance: 'defaultInstance',
         isFirstRun: true,
         deviceId: deviceInfo['deviceId'],
-        user: null,
+        user: User(
+          id: null,
+          firstName: "Anonymous",
+          lastName: "User",
+          email: 'Please LogIn To See Email'
+        ),
         update: Update(
           forceUpdate: false,
           latest: 1.0,

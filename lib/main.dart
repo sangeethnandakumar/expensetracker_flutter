@@ -1,3 +1,4 @@
+import 'package:expences/pages/profile_page.dart';
 import 'package:expences/pages/tours/base/tour_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:expences/bl/repos/config_repo.dart';
@@ -95,7 +96,7 @@ class _MainAppState extends State<MainApp> {
     _pages = [
       TrackPage(onSuccess: () => setState(() => _currentIndex = 1)),
       RecordsPage(),
-      ReportPage(),
+      ProfilePage(),
     ];
   }
 
@@ -129,7 +130,8 @@ class _MainAppState extends State<MainApp> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.track_changes), label: 'Track'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Records')
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Records'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_2), label: 'Profile'),
         ],
         currentIndex: _currentIndex,
         selectedItemColor: Colors.blue,

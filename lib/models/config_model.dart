@@ -57,10 +57,10 @@ class ConfigModel {
 }
 
 class User {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String email;
+  final String? id;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
 
   User({
     required this.id,
