@@ -11,7 +11,7 @@ class RecordCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Determine if the record is fresh
-    bool isFresh = timeago.format(record.date) == "a moment ago";
+    bool isFresh = timeago.format(DateTime.parse(record.date)) == "a moment ago";
 
     return GestureDetector(
       onLongPress: longPressCallback,
@@ -50,7 +50,7 @@ class RecordCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    timeago.format(record.date),
+                    timeago.format(DateTime.parse(record.date)),
                     style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.black),
                   ),
                 ),

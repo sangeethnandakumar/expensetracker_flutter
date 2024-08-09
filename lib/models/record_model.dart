@@ -1,7 +1,7 @@
 // lib/models/record.dart
 class RecordModel {
   final String id;
-  final DateTime date;
+  final String date;
   final double amt;
   final String notes;
   final String category;
@@ -19,7 +19,7 @@ class RecordModel {
   factory RecordModel.fromJson(Map<String, dynamic> json) {
     return RecordModel(
       id: json['id'],
-      date: DateTime.parse(json['date']),
+      date: json['date'],
       amt: json['exp'].toDouble(),
       notes: json['notes'],
       category: json['category'],
@@ -30,7 +30,7 @@ class RecordModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'date': date.toIso8601String(),
+      'date': date,
       'exp': amt,
       'notes': notes,
       'category': category,

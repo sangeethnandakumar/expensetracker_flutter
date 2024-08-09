@@ -129,9 +129,7 @@ class _MainAppState extends State<MainApp> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.track_changes), label: 'Track'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Records'),
-          BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login'),
-          BottomNavigationBarItem(icon: Icon(Icons.report), label: 'Report'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Records')
         ],
         currentIndex: _currentIndex,
         selectedItemColor: Colors.blue,

@@ -46,7 +46,7 @@ class RecordRepository extends BaseRepository<RecordModel> {
 
     // Filter records within the specified date range
     List<RecordModel> filteredRecords = allRecords.where((record) {
-      return record.date.isAfter(startDate) && record.date.isBefore(endDate);
+      return DateTime.parse(record.date).isAfter(startDate) && DateTime.parse(record.date).isBefore(endDate);
     }).toList();
 
     return sortRecordsByDate(filteredRecords);
@@ -88,7 +88,7 @@ class RecordRepository extends BaseRepository<RecordModel> {
   // Additional method to fetch records by date range
   Future<List<RecordModel>> getRecordsByDateRange(DateTime start, DateTime end) async {
     final records = await getAll();
-    return records.where((record) => record.date.isAfter(start) && record.date.isBefore(end)).toList();
+    return records.where((record) => DateTime.parse(record.date).isAfter(start) && DateTime.parse(record.date).isBefore(end)).toList();
   }
 
   // Additional method to sort records by expense amount

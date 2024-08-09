@@ -72,7 +72,7 @@ class _TrackPageState extends State<TrackPage> {
     // Create a Record object
     final record = RecordModel(
       id: Uuid().v4(),
-      date: DateTime.now(),
+      date: DateTime.now().toUtc().toIso8601String(),
       amt: (double.tryParse(_money)!.round() * -1).toDouble(),
       notes: _notes,
       category: _category,
@@ -99,7 +99,7 @@ class _TrackPageState extends State<TrackPage> {
     // Create a Record object
     final record = RecordModel(
         id: Uuid().v4(),
-        date: DateTime.now(),
+        date: DateTime.now().toUtc().toIso8601String(),
         amt: double.tryParse(_money)!.round().toDouble(),
         notes: _notes,
         category: _category,
