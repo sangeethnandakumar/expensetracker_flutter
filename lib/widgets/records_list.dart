@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../models/CategoryModel.dart';
-import '../models/record.dart';
+import '../models/category_model.dart';
+import '../models/record_model.dart';
 import 'record_card.dart';
 
 class RecordsList extends StatelessWidget {
-  final List<Record> records;
+  final List<RecordModel> records;
   final Function(String) onLongPress;
   final CategoryModel? Function(String) getCategory;
 
@@ -32,7 +32,7 @@ class RecordsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Group records by category
-    Map<String, List<Record>> groupedRecords = {};
+    Map<String, List<RecordModel>> groupedRecords = {};
     for (var record in records) {
       CategoryModel? category = getCategory(record.category);
       String categoryTitle = category?.title ?? 'Unknown Category';
@@ -46,7 +46,7 @@ class RecordsList extends StatelessWidget {
       itemCount: groupedRecords.length,
       itemBuilder: (context, index) {
         String categoryTitle = groupedRecords.keys.elementAt(index);
-        List<Record> categoryRecords = groupedRecords[categoryTitle]!;
+        List<RecordModel> categoryRecords = groupedRecords[categoryTitle]!;
         CategoryModel? category = getCategory(categoryRecords.first.category);
 
         return Theme(
@@ -63,7 +63,7 @@ class RecordsList extends StatelessWidget {
             children: categoryRecords.map((record) {
               int recordIndex = categoryRecords.indexOf(record);
               return Animate(
-                effects: [FadeEffect(duration: 300.ms, delay: (recordIndex * 100).ms)],
+                effects: [FadeEffect(duration: 200.ms, delay: (recordIndex * 25).ms)],
                 child: RecordCard(
                   record: record,
                   longPressCallback: () => onLongPress(record.id),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Api.dart';
-import '../models/CategoryModel.dart';
+import '../bl/repos/categories_repo.dart';
+import '../models/category_model.dart';
 import '../widgets/categorygrid.dart';
 import 'category_creation.dart';
 
@@ -12,6 +13,7 @@ class CategoryEditorPage extends StatefulWidget {
 class _CategoryEditorPageState extends State<CategoryEditorPage> {
   List<CategoryModel> categories = [];
   bool isLoading = true;
+  final CategoryRepository _categoryRepository = CategoryRepository();
 
   @override
   void initState() {
@@ -19,21 +21,16 @@ class _CategoryEditorPageState extends State<CategoryEditorPage> {
     fetchCategories();
   }
 
-  void fetchCategories() {
+  void fetchCategories() async {
     setState(() {
       isLoading = true;
     });
-    Api.get('/categories', (data) {
-      setState(() {
-        categories = (data as List).map((item) => CategoryModel.fromJson(item)).toList();
-        isLoading = false;
-      });
-    }, (error) {
-      setState(() {
-        isLoading = false;
-      });
-      // Handle error
-      print("Error fetching categories: $error");
+
+    var allCatageories = await _categoryRepository.getAll();
+
+    setState(() {
+      categories = allCatageories;
+      isLoading = false;
     });
   }
 

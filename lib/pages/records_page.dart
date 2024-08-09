@@ -1,9 +1,10 @@
+import 'package:expences/bl/repos/categories_repo.dart';
 import 'package:expences/widgets/loading.dart';
 import 'package:flutter/material.dart';
-import '../models/CategoryModel.dart';
-import '../models/record.dart';
+import '../bl/repos/records_repo.dart';
+import '../models/category_model.dart';
+import '../models/record_model.dart';
 import '../widgets/currencyeditor.dart';
-import '../api.dart';
 import 'package:intl/intl.dart';
 import '../widgets/daybar.dart';
 import '../widgets/empty_state.dart';
@@ -15,7 +16,7 @@ class RecordsPage extends StatefulWidget {
 }
 
 class _RecordsPageState extends State<RecordsPage> {
-  List<Record> _records = [];
+  List<RecordModel> _records = [];
   Map<String, CategoryModel> _categories = {};
   bool _isLoading = false;
   DateTime _startDate = DateTime.now();
@@ -23,6 +24,8 @@ class _RecordsPageState extends State<RecordsPage> {
   String? _errorMessage;
   DateTime _selectedDate = DateTime.now();
   double _totalExp = 0.0;
+  final RecordRepository _recordRepository = RecordRepository();
+  final CategoryRepository _categoryRepository = CategoryRepository();
 
   final int _daysRange = 6;
 
@@ -48,14 +51,11 @@ class _RecordsPageState extends State<RecordsPage> {
 
   Future<void> _fetchCategories() async {
     try {
-      await Api.get('/categories', (data) {
-        setState(() {
-          _categories = Map.fromEntries((data as List)
-              .map((json) => CategoryModel.fromJson(json))
-              .map((category) => MapEntry(category.id, category)));
-        });
-      }, (error) {
-        print('Error fetching categories: $error');
+      var allCatageories = await _categoryRepository.getAll();
+      setState(() {
+        _categories = Map.fromEntries(allCatageories
+            .map((json) => json)
+            .map((category) => MapEntry(category.id, category)));
       });
     } catch (e) {
       print('Exception while fetching categories: $e');
@@ -73,17 +73,12 @@ class _RecordsPageState extends State<RecordsPage> {
 
     String endpoint = '/tracks?start=$start&end=$end';
 
-    return Api.get(endpoint, (data) {
-      setState(() {
-        _records = (data as List).map((json) => Record.fromJson(json)).toList();
-        _totalExp = _records.fold(0.0, (sum, record) => sum + record.exp);
-        _isLoading = false;
-      });
-    }, (error) {
-      setState(() {
-        _errorMessage = error;
-        _isLoading = false;
-      });
+    var allRecords = await _recordRepository.getRange(start, end);
+
+    setState(() {
+      _records = allRecords;
+      _totalExp = _records.fold(0.0, (sum, record) => sum + record.amt);
+      _isLoading = false;
     });
   }
 
@@ -98,7 +93,7 @@ class _RecordsPageState extends State<RecordsPage> {
             children: [
               ListTile(
                 leading: Icon(Icons.delete, color: Colors.red),
-                title: Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                title: Text('Delete This Record', style: TextStyle(color: Colors.redAccent)),
                 onTap: () async {
                   await _deleteRecord(recordId);
                   Navigator.pop(context);
@@ -114,7 +109,15 @@ class _RecordsPageState extends State<RecordsPage> {
   Future<void> _deleteRecord(String recordId) async {
     String endpoint = '/tracks/$recordId';
 
-    try {
+    await _recordRepository.delete(recordId);
+
+    setState(() {
+      _records.removeWhere((record) => record.id == recordId);
+      _totalExp = _records.fold(0.0, (sum, record) => sum + record.amt);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Record deleted successfully.')));
+
+    /*try {
       await Api.delete(
         endpoint,
             (data) {
@@ -131,6 +134,8 @@ class _RecordsPageState extends State<RecordsPage> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $error')));
     }
+     */
+
   }
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
@@ -222,11 +227,11 @@ class _RecordsPageState extends State<RecordsPage> {
                 ],
               ),
             ),
-            if (_totalExp > 0)
+              if(_totalExp.round() != 0)
               CurrencyEditor(
                 money: _totalExp.round().toString(),
                 fontSize: 80,
-                textColor: Colors.redAccent.shade100,
+                textColor: _totalExp.round() < 0 ? Colors.redAccent.shade100 : Colors.green.shade300,
               ),
             Expanded(
               child: RefreshIndicator(

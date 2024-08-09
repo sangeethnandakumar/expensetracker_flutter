@@ -1,14 +1,17 @@
+import 'package:expences/models/record_model.dart';
 import 'package:expences/pages/category_editor.dart';
 import 'package:expences/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import '../bl/repos/categories_repo.dart';
+import '../bl/repos/records_repo.dart';
+import '../models/category_model.dart';
 import 'category_creation.dart';
 import '../widgets/categorygrid.dart';
 import '../widgets/currencyeditor.dart';
 import '../widgets/keypad.dart';
 import '../widgets/action_buttons.dart';
 import '../widgets/notes_input.dart';
-import '../api.dart';
-import '../models/CategoryModel.dart';
+import 'package:uuid/uuid.dart';
 
 class TrackPage extends StatefulWidget {
   final Function onSuccess;
@@ -25,6 +28,8 @@ class _TrackPageState extends State<TrackPage> {
   String _category = '';
   List<CategoryModel> _categories = [];
   bool _isLoading = true;
+  final RecordRepository _recordRepository = RecordRepository();
+  final CategoryRepository _categoryRepository = CategoryRepository();
 
   @override
   void initState() {
@@ -32,21 +37,17 @@ class _TrackPageState extends State<TrackPage> {
     fetchCategories();
   }
 
-  void fetchCategories() {
+  void fetchCategories() async {
     setState(() {
       _isLoading = true;
     });
-    Api.get('/categories', (data) {
-      setState(() {
-        _categories = (data as List).map((item) => CategoryModel.fromJson(item)).toList();
-        _isLoading = false;
-      });
-    }, (error) {
-      setState(() {
-        _isLoading = false;
-      });
-      // Handle error
-      print("Error fetching categories: $error");
+
+    var allCategories = await _categoryRepository.getAll();
+
+    setState(() {
+      _isLoading = false;
+      _categories = allCategories;
+      _category = allCategories.length > 0 ? allCategories[0].id : '';
     });
   }
 
@@ -68,32 +69,52 @@ class _TrackPageState extends State<TrackPage> {
       return;
     }
 
-    final expenseData = {
-      "exp": double.tryParse(_money)!.round(),
-      "inc": 0,
-      "notes": _notes,
-      "category": _category,
-    };
-
-    Api.post(
-      '/tracks',
-      expenseData,
-          (response) async {
-        _showSnackbar("Expense added successfully!", Colors.green);
-        widget.onSuccess();
-        setState(() {
-          _money = '0';
-          _notes = '';
-        });
-      },
-          (error) {
-        _showSnackbar("Failed to add expense: $error", Colors.red);
-      },
+    // Create a Record object
+    final record = RecordModel(
+      id: Uuid().v4(),
+      date: DateTime.now(),
+      amt: (double.tryParse(_money)!.round() * -1).toDouble(),
+      notes: _notes,
+      category: _category,
+      isIncome: false
     );
+
+    // Use the RecordRepository to add the record
+    await _recordRepository.create(record);
+
+    _showSnackbar("Expense added successfully!", Colors.green);
+    widget.onSuccess();
+    setState(() {
+      _money = '0';
+      _notes = '';
+    });
   }
 
-  void _addIncome() {
+  void _addIncome() async {
+    if (_notes.isEmpty || double.tryParse(_money) == null || double.tryParse(_money)!.round() <= 0 || _category.isEmpty) {
+      _showSnackbar("Please enter valid income, notes, and select a category", Colors.red);
+      return;
+    }
+
+    // Create a Record object
+    final record = RecordModel(
+        id: Uuid().v4(),
+        date: DateTime.now(),
+        amt: double.tryParse(_money)!.round().toDouble(),
+        notes: _notes,
+        category: _category,
+        isIncome: true
+    );
+
+    // Use the RecordRepository to add the record
+    await _recordRepository.create(record);
+
     _showSnackbar("Income added successfully!", Colors.green);
+    widget.onSuccess();
+    setState(() {
+      _money = '0';
+      _notes = '';
+    });
   }
 
   void _showSnackbar(String message, Color backgroundColor) {

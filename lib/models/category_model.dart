@@ -22,4 +22,14 @@ class CategoryModel {
       customImage: json['customImage'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'icon': icon,
+      'color': color,
+      'customImage': customImage,
+    };
+  }
 }

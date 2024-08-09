@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../Api.dart';
-import '../models/CategoryModel.dart';
+import 'package:uuid/uuid.dart';
+import '../bl/repos/categories_repo.dart';
+import '../models/category_model.dart';
 import '../widgets/category.dart';
 import '../widgets/icon_grid.dart';
 import '../widgets/notes_input.dart';
@@ -26,6 +27,7 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
     return HSVColor.fromAHSV(1.0, hue, 0.8, 0.8).toColor();
   });
   String? base64Image; // To store base64 representation of the cropped image
+  final CategoryRepository _categoryRepository = CategoryRepository();
 
   @override
   void initState() {
@@ -107,7 +109,7 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
     );
   }
 
-  void createCategory() {
+  void createCategory() async {
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Title cannot be empty')),
@@ -115,13 +117,23 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
       return;
     }
 
-    final categoryData = {
-      'title': title,
-      'icon': selectedIconName,
-      'color': '#${selectedColor.value.toRadixString(16).substring(2)}',
-      'customImage': base64Image,
-    };
+    final categoryData =  CategoryModel(
+      id: Uuid().v4(),
+      title: title,
+      icon: selectedIconName,
+      color: '#${selectedColor.value.toRadixString(16).substring(2)}',
+      customImage: base64Image,
+    );
 
+
+    await _categoryRepository.create(categoryData);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Category created successfully')),
+    );
+    Navigator.of(context).pop(true);
+
+    /*
     Api.post('/categories', categoryData, (response) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Category created successfully')),
@@ -133,6 +145,7 @@ class _CategoryCreationPageState extends State<CategoryCreationPage>
       );
       Navigator.of(context).pop(false); // Pass false to indicate failure
     });
+    */
   }
 
   @override

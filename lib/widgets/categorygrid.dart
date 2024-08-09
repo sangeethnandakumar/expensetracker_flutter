@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../api.dart';
-import '../models/CategoryModel.dart';
+import '../bl/repos/categories_repo.dart';
+import '../models/category_model.dart';
 import 'category.dart';
 import 'empty_category_placeholder.dart';
 
@@ -29,6 +30,7 @@ class CategoryGrid extends StatefulWidget {
 
 class _CategoryGridState extends State<CategoryGrid> {
   int? selectedIndex = 0;
+  final CategoryRepository _categoryRepository = CategoryRepository();
 
   void _showOptionsBottomSheet(String categoryId) {
     showModalBottomSheet(
@@ -41,7 +43,7 @@ class _CategoryGridState extends State<CategoryGrid> {
             children: [
               ListTile(
                 leading: Icon(Icons.delete, color: Colors.red),
-                title: Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                title: Text('Delete This Categeory', style: TextStyle(color: Colors.redAccent)),
                 onTap: () {
                   Navigator.pop(context);
                   _showWarningDialog(categoryId);
@@ -84,22 +86,11 @@ class _CategoryGridState extends State<CategoryGrid> {
   Future<void> _deleteCategory(String categoryId) async {
     String endpoint = '/categories/$categoryId';
 
-    try {
-      await Api.delete(
-        endpoint,
-            (data) {
-          setState(() {
-            widget.categories.removeWhere((category) => category.id == categoryId);
-          });
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Category deleted successfully.')));
-        },
-            (error) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $error')));
-        },
-      );
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $error')));
-    }
+    await _categoryRepository.delete(categoryId);
+    setState(() {
+      widget.categories.removeWhere((category) => category.id == categoryId);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Category deleted successfully.')));
   }
 
   @override

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import '../models/record.dart';
+import '../models/record_model.dart';
 
 class RecordCard extends StatelessWidget {
-  final Record record;
+  final RecordModel record;
   final VoidCallback? longPressCallback;
 
   const RecordCard({Key? key, required this.record, this.longPressCallback}) : super(key: key);
@@ -28,18 +28,18 @@ class RecordCard extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: isFresh
-                  ? [Colors.white, Colors.deepOrange.shade400] // Higher saturation for fresh items
-                  : [Colors.white, Colors.orange.shade100], // Normal saturation for older items
+                  ? [Colors.white, record.isIncome ? Colors.green.shade300 : Colors.deepOrange.shade400] // Higher saturation for fresh items
+                  : [Colors.white, record.isIncome ? Colors.green.shade300 : Colors.orange.shade100], // Normal saturation for older items
             ),
           ),
           child: ListTile(
             leading: Icon(
-              Icons.keyboard_arrow_down_outlined,
+              record.isIncome ? Icons.keyboard_arrow_up_outlined : Icons.keyboard_arrow_down_outlined,
               size: 40,
-              color: Colors.redAccent.shade100,
+              color: record.isIncome ? Colors.green :  Colors.redAccent.shade100,
             ),
             title: Text(
-              '₹ ${record.exp.toString()}',
+              '₹ ${record.amt.toString()}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
             ),
             subtitle: Column(

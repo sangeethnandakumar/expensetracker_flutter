@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../helpers/icon_mapping.dart';
-import '../models/CategoryModel.dart';
+import '../models/category_model.dart';
 
 class Category extends StatelessWidget {
   final CategoryModel category;
