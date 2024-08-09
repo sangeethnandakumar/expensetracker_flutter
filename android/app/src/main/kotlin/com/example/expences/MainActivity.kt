@@ -1,4 +1,4 @@
-package com.example.expences
+package com.twileloop.expensetracker
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
